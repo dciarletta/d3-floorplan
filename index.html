@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Floor Plan - local coordinate map layers for D3.js</title>
+<script type="text/javascript" src="lib/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="lib/jquery/jquery-ui-1.8.21.custom.min.js"></script>
+<script type="text/javascript" src="lib/d3/d3.v2.min.js"></script>
+<script type="text/javascript" src="d3.floorplan.min.js"></script>
+<style type="text/css">
+	@import url('lib/jquery/jquery-ui.css');
+	@import url('d3.floorplan.css');
+	
+	body {
+	  font-size: 14px;
+	  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	  margin: 50px auto 20px;
+	  width: 720px;
+	  background: #fcfcfc;
+	  line-height: 1.45em;
+	}
+	a {
+	  color: #555;
+	}
+	a:hover {
+	  color: #000;
+	}
+	ul {
+	  margin: 0 20px;
+	  padding: 0;
+	}
+	div.code {
+		border: 1px solid #ccc;
+		background: #eee;
+		margin: 10px 0 10px 0;
+		padding: 10px;
+		width: 720px;
+	}
+</style>
+</head>
+<body>
+<a href="https://github.com/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="forkme.png" alt="Fork me on GitHub"></a>
+<h1>Floor Plan <small>(0.1.0)</small></h1>
+<p>A layered map <a href="http://bost.ocks.org/mike/chart/">reusable chart</a> suitable for small area, local coordinate systems like building floor plans.
+There is no tiling or projection capabilities, just simple X-Y scaled coordinates, pan-zoom functionality, and a set of layers for data visualization over the region.</p>
+<p><strong><a href="#">d3.floorplan.min.js</a></strong><small> - requires <strong><a href="http://d3js.org/">D3.js</a></strong></small></p>
+
+<h3>Example</h3>
+<p>This basic example demonstrates how to create and assign data for each layer. 
+Interact with the map by zooming and then panning or access the different layers by 
+turning off higher layers in the map layer controls in the upper right.</p>
+<p><small><i>I was unable to find a good open data set to use for this example so I just made up a few values to show the concepts of the layers. 
+If you're aware of something that might make for a better example please let me know.</i></small></p>
+<p style="text-align: right">Layer Controls &darr;</p>
+<div id="demo"></div>
+<div class="code"><a href="#" class="show-hide" content="demo-code">Show Code</a></div>
+<script id="demo-code" type="text/javascript">
+var xscale = d3.scale.linear()
+               .domain([0,50.0])
+               .range([0,720]),
+    yscale = d3.scale.linear()
+               .domain([0,33.79])
+               .range([0,487]),
+    map = d3.floorplan().xScale(xscale).yScale(yscale),
+    imagelayer = d3.floorplan.imagelayer(),
+    heatmap = d3.floorplan.heatmap(),
+    vectorfield = d3.floorplan.vectorfield(),
+    pathplot = d3.floorplan.pathplot(),
+    overlays = d3.floorplan.overlays().editMode(true),
+    mapdata = {};
+
+mapdata[imagelayer.id()] = [{
+    url: 'Sample_Floorplan.jpg',
+    x: 0,
+    y: 0,
+    height: 33.79,
+    width: 50.0
+     }];
+
+map.addLayer(imagelayer)
+   .addLayer(heatmap)
+   .addLayer(vectorfield)
+   .addLayer(pathplot)
+   .addLayer(overlays);
+
+d3.json("demo-data.json", function(data) {
+	mapdata[heatmap.id()] = data.heatmap;
+	mapdata[overlays.id()] = data.overlays;
+	mapdata[vectorfield.id()] = data.vectorfield;
+	mapdata[pathplot.id()] = data.pathplot;
+	
+	d3.select("#demo").append("svg")
+		.attr("height", 487).attr("width",720)
+		.datum(mapdata).call(map);
+});
+</script>
+<h3>More to come...</h3>
+<p><small><i>Written by</i> David Ciarletta</small></p>
+<script type="text/javascript">
+$(".show-hide").click(function() {
+	if ($(this).text() === "Show Code") {
+		var code = $("#" + $(this).attr("content")).text();
+		$(this).parent().append("<pre>" + code + "</pre>");
+		$(this).text("Hide Code");
+	} else {
+		$(this).siblings("pre").remove();
+		$(this).text("Show Code");
+	}
+	event.preventDefault();
+});
+</script>
+</body>
+</html>
