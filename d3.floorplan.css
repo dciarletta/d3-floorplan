@@ -1,0 +1,24 @@
+/* map menu controls */
+.ui-active rect {fill: #212121}
+.ui-active text {fill: #fff}
+.ui-default rect {fill: #e6e6e6}
+.ui-default text {fill: #000}
+
+/* heatmap colors (courtesy of colorbrewer2.org) */
+.RdYlBu .d6-6 {fill:#D73027;background:#D73027;color:#121212}
+.RdYlBu .d6-5 {fill:#FC8D59;background:#FC8D59;color:#121212}
+.RdYlBu .d6-4 {fill:#FEE090;background:#FEE090;color:#121212}
+.RdYlBu .d6-3 {fill:#E0F3F8;background:#E0F3F8;color:#121212}
+.RdYlBu .d6-2 {fill:#91BFDB;background:#91BFDB;color:#121212}
+.RdYlBu .d6-1 {fill:#4575B4;background:#4575B4;color:#121212}
+
+/* overlays */
+.polygon {stroke:white;stroke-width:2px;fill-opacity:0.2}
+.vertex {stroke:lime;stroke-width:2px;fill:none}
+
+/* vector field */
+.vector {stroke-width:1px;stroke:lightsteelblue}
+
+/* path plot */
+.pathplot path {stroke-width:2px;stroke:steelblue}
+.planned {stroke-dasharray:9, 5}

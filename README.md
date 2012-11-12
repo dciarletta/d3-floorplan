@@ -1,4 +1,9 @@
-d3-floorplan
-============
+# Floor Plan
 
-A set of layered reusable charts build on D3.js for map like interaction on local coordinate systems. 
+A map like interactive set of [reusable charts](http://bost.ocks.org/mike/chart/) for layering visualizations on a common local coordinate system like floor plans.
+
+# Resources
+
+ * [Demo Page](http://dciarletta.github.com/d3-floorplan/) 
+
+Requires [D3](http://mbostock.github.com/d3/).

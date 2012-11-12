@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="position-analytics" basedir="." default="compile-floorplan">
+	<taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
+	           classpath="build/closure/compiler.jar"/>
+	
+	<target name="compile-floorplan">
+		<jscomp compilationlevel="simple" output="d3.floorplan.min.js">
+			<sources dir="src">
+				<file name="floorplan.js"/>
+				<file name="imagelayer.js"/>
+				<file name="heatmap.js"/>
+				<file name="overlays.js"/>
+				<file name="vectorfield.js"/>
+				<file name="pathplot.js"/>
+			</sources>
+		</jscomp>
+	</target>
+</project>
