@@ -5,7 +5,7 @@ A map-like interactive set of [reusable charts](http://bost.ocks.org/mike/chart/
 # Resources
 
  * [Demo Page](http://dciarletta.github.com/d3-floorplan/) 
- * [API Reference](wiki/API-Reference)
- * [Data Formats](wiki/Data-Formats)
+ * [API Reference](http://github.com/dciarletta/d3-floorplan/wiki/API-Reference)
+ * [Data Formats](http://github.com/dciarletta/d3-floorplan/wiki/Data-Formats)
 
 Requires [D3](http://mbostock.github.com/d3/).
