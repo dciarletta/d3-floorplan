@@ -24,10 +24,10 @@ d3.floorplan = function() {
 	function map(g) {
 		var width = xScale.range()[1] - xScale.range()[0],
 		    height = yScale.range()[1] - yScale.range()[0];
-		
+
 		g.each(function(data){
 			if (! data) return;
-			
+
 			var g = d3.select(this);
 
 			// define common graphical elements
@@ -61,8 +61,8 @@ d3.floorplan = function() {
 			.attr("transform", "translate("+(width-offset)+",0)")
 				.select("rect")
 				.attr("height", panelHt);
-			
-			
+
+
 			// render and reorder layer controls
 			var layerControls = controls.select("g.layer-controls")
 				.selectAll("g").data(layers, function(l) {return l.id();}),
@@ -82,7 +82,7 @@ d3.floorplan = function() {
 							.classed("ui-default", false);
 					}
 				});
-			
+
 			layerControlsEnter.append("rect")
 				.attr("x", 0)
 				.attr("y", 1)
@@ -91,17 +91,17 @@ d3.floorplan = function() {
 				.attr("width", 75)
 				.attr("height", 18)
 				.attr("stroke-width", "1px");
-			
+
 			layerControlsEnter.append("text")
 				.attr("x", 10)
 				.attr("y", 15)
 				.style("font-size","12px")
 				.style("font-family", "Helvetica, Arial, sans-serif")
 				.text(function(l) { return l.title(); });
-			
+
 			layerControls.transition().duration(1000)
-			.attr("transform", function(d,i) { 
-				return "translate(0," + ((layers.length-(i+1))*20) + ")"; 
+			.attr("transform", function(d,i) {
+				return "translate(0," + ((layers.length-(i+1))*20) + ")";
 			});
 
 			// render and reorder layers
@@ -115,12 +115,12 @@ d3.floorplan = function() {
 				.datum(null);
 			maplayers.exit().remove();
 			maplayers.order();
-			
+
 			// redraw layers
 			maplayers.each(function(layer) {
 				d3.select(this).select("g." + layer.id()).datum(data[layer.id()]).call(layer);
 			});
-			
+
 			// add pan - zoom behavior
 			g.call(d3.behavior.zoom().scaleExtent([1,maxZoom])
 					.on("zoom", function() {
@@ -138,51 +138,57 @@ d3.floorplan = function() {
 		layers.forEach(function(l) { l.xScale(xScale); });
 		return map;
 	};
-	
+
 	map.yScale = function(scale) {
 		if (! arguments.length) return yScale;
 		yScale = scale;
 		layers.forEach(function(l) { l.yScale(yScale); });
 		return map;
 	};
-	
+
+	map.maxZoom = function(zoom) {
+		if (! arguments.length) return maxZoom;
+		maxZoom = zoom;
+		return map;
+	};
+
 	map.panZoom = function(enabled) {
 		if (! arguments.length) return panZoomEnabled;
 		panZoomEnabled = enabled;
 		return map;
 	};
-	
+
 	map.addLayer = function(layer, index) {
 		layer.xScale(xScale);
 		layer.yScale(yScale);
-		
+
 		if (arguments.length > 1 && index >=0) {
 			layers.splice(index, 0, layer);
 		} else {
 			layers.push(layer);
 		}
-		
+
 		return map;
 	};
-	
+
 	function __set_view(g, s, t) {
 		if (! g) return;
 		if (s) g.__scale__ = s;
 		if (t && t.length > 1) g.__translate__ = t;
 
 		// limit translate to edges of extents
-		var minXTranslate = (1 - g.__scale__) * 
+		var minXTranslate = (1 - g.__scale__) *
 							(xScale.range()[1] - xScale.range()[0]);
-		var minYTranslate = (1 - g.__scale__) * 
+		var minYTranslate = (1 - g.__scale__) *
 							(yScale.range()[1] - yScale.range()[0]);
 
-		g.__translate__[0] = Math.min(xScale.range()[0], 
+		g.__translate__[0] = Math.min(xScale.range()[0],
 								Math.max(g.__translate__[0], minXTranslate));
-		g.__translate__[1] = Math.min(yScale.range()[0], 
+		g.__translate__[1] = Math.min(yScale.range()[0],
 								Math.max(g.__translate__[1], minYTranslate));
 		g.selectAll(".map-layers")
-			.attr("transform", 
-				  "translate(" + g.__translate__ + 
+			.attr("transform",
+				  "translate(" + g.__translate__ +
 				  	 ")scale(" + g.__scale__ + ")");
 	};
 
@@ -262,11 +268,11 @@ d3.floorplan = function() {
 			.attr("fill","none")
 			.attr("stroke", "none")
 			.style("cursor","pointer")
-			.on("mouseover", function() { 
-				controls.selectAll("path.ui-show-hide").style("opacity", 1); 
+			.on("mouseover", function() {
+				controls.selectAll("path.ui-show-hide").style("opacity", 1);
 			})
-			.on("mouseout", function() { 
-				controls.selectAll("path.ui-show-hide").style("opacity", 0.5); 
+			.on("mouseout", function() {
+				controls.selectAll("path.ui-show-hide").style("opacity", 0.5);
 			})
 			.on("click", function() {
 				if (controls.select(".hide").classed("ui-show-hide")) {
@@ -296,7 +302,7 @@ d3.floorplan = function() {
 						.classed("ui-show-hide",true);
 						controls.selectAll("path.ui-show-hide")
 						.style("opacity",0.5);
-					});				
+					});
 				}
 			});
 
