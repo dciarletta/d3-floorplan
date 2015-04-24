@@ -18,6 +18,7 @@ d3.floorplan = function() {
 	var layers = [],
 	panZoomEnabled = true,
 	maxZoom = 5,
+	toolsWidth = 95;
 	xScale = d3.scale.linear(),
 	yScale = d3.scale.linear();
 
@@ -55,7 +56,7 @@ d3.floorplan = function() {
 
 			__init_controls(controlsEnter);
 			var offset = controls.select(".hide")
-						.classed("ui-show-hide") ? 95 : 10,
+						.classed("ui-show-hide") ? toolsWidth+20 : 10,
 			panelHt = Math.max(45, 10 + layers.length * 20);
 			controls.attr("view-width", width)
 			.attr("transform", "translate("+(width-offset)+",0)")
@@ -88,7 +89,7 @@ d3.floorplan = function() {
 				.attr("y", 1)
 				.attr("rx", 5)
 				.attr("ry", 5)
-				.attr("width", 75)
+				.attr("width", toolsWidth)
 				.attr("height", 18)
 				.attr("stroke-width", "1px");
 
@@ -149,6 +150,12 @@ d3.floorplan = function() {
 	map.maxZoom = function(zoom) {
 		if (! arguments.length) return maxZoom;
 		maxZoom = zoom;
+		return map;
+	};
+
+	map.layersWidth = function(width) {
+		if (! arguments.length) return toolsWidth;
+		toolsWidth = width;
 		return map;
 	};
 
@@ -292,7 +299,7 @@ d3.floorplan = function() {
 				} else {
 					controls.transition()
 					.duration(1000)
-					.attr("transform", "translate("+(controls.attr("view-width")-95)+",0)")
+					.attr("transform", "translate("+(controls.attr("view-width")-(toolsWidth+20))+",0)")
 					.each("end", function() {
 						controls.select(".show")
 						.style("opacity",0)
@@ -309,7 +316,7 @@ d3.floorplan = function() {
 			controls.append("rect")
 			.attr("x",10)
 			.attr("y",0)
-			.attr("width", 85)
+			.attr("width", toolsWidth+10)
 			.attr("fill", "rgba(204,204,204,0.9)")
 			.attr("stroke", "none");
 
