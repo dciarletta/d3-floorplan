@@ -17,7 +17,6 @@
 d3.floorplan.overlays = function() {
 	var x = d3.scale.linear(),
 	y = d3.scale.linear(),
-	id = "fp-overlays-" + new Date().valueOf(),
 	name = "overlays",
 	canvasCallbacks = [],
 	selectCallbacks = [],
@@ -31,7 +30,15 @@ d3.floorplan.overlays = function() {
 	.on("drag", __mousemove)
 	.on("dragend", __mouseup),
 	dragged = null;
-	moved = false;
+	moved = false,
+	vis = true;
+
+	if(typeof d3.floorplan.overlays.prototype.__id == "undefined") {
+		d3.floorplan.overlays.prototype.__id = 0;
+	}
+	var id = "fp-overlays-"
+		+ new Date().valueOf()
+		+ d3.floorplan.overlays.prototype.__id++;
 
 	function overlays(g) {
 		g.each(function(data){
@@ -160,6 +167,12 @@ d3.floorplan.overlays = function() {
 	overlays.title = function(n) {
 		if (! arguments.length) return name;
 		name = n;
+		return overlays;
+	};
+
+	overlays.visible = function(v) {
+		if (! arguments.length) return vis;
+		vis = v;
 		return overlays;
 	};
 

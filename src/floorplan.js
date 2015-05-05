@@ -68,19 +68,21 @@ d3.floorplan = function() {
 			var layerControls = controls.select("g.layer-controls")
 				.selectAll("g").data(layers, function(l) {return l.id();}),
 			layerControlsEnter = layerControls.enter()
-				.append("g").attr("class", "ui-active")
+				.append("g").attr("class", function(ll) {return (ll.visible() ? "ui-active" : "ui-default");})
 				.style("cursor","pointer")
 				.on("click", function(l) {
 					var button = d3.select(this);
 					var layer = g.selectAll("g."+l.id());
 					if (button.classed("ui-active")) {
 						layer.style("display","none");
+						l.visible(false);
 						button.classed("ui-active",false)
 							.classed("ui-default",true);
 					} else {
 						layer.style("display","inherit");
 						button.classed("ui-active", true)
 							.classed("ui-default", false);
+						l.visible(true);
 					}
 				});
 
@@ -113,6 +115,7 @@ d3.floorplan = function() {
 			.attr("class", function(l) {return "maplayer " + l.title();})
 				.append("g")
 				.attr("class", function(l) {return l.id();})
+				.attr("style", function(l) {return (l.visible() ? "display:inherit" : "display:none");})
 				.datum(null);
 			maplayers.exit().remove();
 			maplayers.order();
