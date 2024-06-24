@@ -20,43 +20,50 @@ d3.floorplan.pathplot = function() {
 	line = d3.svg.line()
 		.x(function(d) { return x(d.x); })
 		.y(function(d) { return y(d.y); }),
-	id = "fp-pathplot-" + new Date().valueOf(),
 	name = "pathplot",
-	pointFilter = function(d) { return d.points; };
-	
+	pointFilter = function(d) { return d.points; },
+	vis = true;
+
+	if(typeof d3.floorplan.pathplot.prototype.__id == "undefined") {
+		d3.floorplan.pathplot.prototype.__id = 0;
+	}
+	var id = "fp-pathplot-"
+		+ new Date().valueOf()
+		+ d3.floorplan.pathplot.prototype.__id++;
+
 	function pathplot(g) {
 		g.each(function(data) {
 			if (!data) return;
-			
+
 			var g = d3.select(this),
 			paths = g.selectAll("path")
 				.data(data, function(d) { return d.id; });
-			
+
 			paths.exit().transition()
 			.style("opacity", 1e-6).remove();
-			
+
 			paths.enter().append("path")
 			.attr("vector-effect", "non-scaling-stroke")
 			.attr("fill", "none")
 			.style("opacity", 1e-6)
 				.append("title");
-			
+
 			paths
 			.attr("class", function(d) { return d.classes || d.id; })
 			.attr("d", function(d,i) { return line(pointFilter(d,i)); })
 				.select("title")
 				.text(function(d) { return d.title || d.id; });
-			
+
 			paths.transition().style("opacity", 1);
 		});
 	}
-	
+
 	pathplot.xScale = function(scale) {
 		if (! arguments.length) return x;
 		x = scale;
 		return pathplot;
 	};
-	
+
 	pathplot.yScale = function(scale) {
 		if (! arguments.length) return y;
 		y = scale;
@@ -66,7 +73,7 @@ d3.floorplan.pathplot = function() {
 	pathplot.id = function() {
 		return id;
 	};
-	
+
 	pathplot.title = function(n) {
 		if (! arguments.length) return name;
 		name = n;
@@ -78,6 +85,12 @@ d3.floorplan.pathplot = function() {
 		pointFilter = fn;
 		return pathplot;
 	};
-	
+
+	pathplot.visible = function(v) {
+		if (! arguments.length) return vis;
+		vis = v;
+		return pathplot;
+	};
+
 	return pathplot;
 };

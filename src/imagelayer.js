@@ -17,23 +17,30 @@
 d3.floorplan.imagelayer = function() {
 	var x = d3.scale.linear(),
 	y = d3.scale.linear(),
-	id = "fp-imagelayer-" + new Date().valueOf(),
-	name = "imagelayer";
-	
+	name = "imagelayer",
+	vis = true;
+
+	if(typeof d3.floorplan.imagelayer.prototype.__id == "undefined") {
+		d3.floorplan.imagelayer.prototype.__id = 0;
+	}
+	var id = "fp-imagelayer-"
+		+ new Date().valueOf()
+		+ d3.floorplan.imagelayer.prototype.__id++;
+
 	function images(g) {
 		g.each(function(data) {
 			if (! data) return;
 			var g = d3.select(this);
-			
+
 			var imgs = g.selectAll("image")
 						.data(data, function(img) {return img.url;});
-			
+
 			imgs.enter().append("image")
 			.attr("xlink:href", function(img) {return img.url;})
 			.style("opacity", 1e-6);
-			
+
 			imgs.exit().transition().style("opacity",1e-6).remove();
-			
+
 			imgs.transition()
 			.attr("x", function(img) {return x(img.x);})
 			.attr("y", function(img) {return y(img.y);})
@@ -48,13 +55,13 @@ d3.floorplan.imagelayer = function() {
 			});
 		});
 	}
-	
+
 	images.xScale = function(scale) {
 		if (! arguments.length) return x;
 		x = scale;
 		return images;
 	};
-	
+
 	images.yScale = function(scale) {
 		if (! arguments.length) return y;
 		y = scale;
@@ -64,10 +71,16 @@ d3.floorplan.imagelayer = function() {
 	images.id = function() {
 		return id;
 	};
-	
+
 	images.title = function(n) {
 		if (! arguments.length) return name;
 		name = n;
+		return images;
+	};
+
+	images.visible = function(v) {
+		if (! arguments.length) return vis;
+		vis = v;
 		return images;
 	};
 

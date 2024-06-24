@@ -20,55 +20,62 @@ d3.floorplan.vectorfield = function() {
 	line = d3.svg.line()
 		.x(function(d) { return x(d.x); })
 		.y(function(d) { return y(d.y); }),
-	id = "fp-vectorfield-" + new Date().valueOf(),
-	name = "vectorfield";
-	
+	name = "vectorfield",
+	vis = true;
+
+	if(typeof d3.floorplan.vectorfield.prototype.__id == "undefined") {
+		d3.floorplan.vectorfield.prototype.__id = 0;
+	}
+	var id = "fp-vectorfield-"
+		+ new Date().valueOf()
+		+ d3.floorplan.vectorfield.prototype.__id++;
+
 	function vectorfield(g) {
 		g.each(function(data) {
 			if (! data || ! data.map) return;
-			
+
 			var g = d3.select(this);
-			
+
 			var cells = g.selectAll("path.vector")
 				.data(data.map, function(d) { return d.x+","+d.y; });
-			
+
 			cells.exit().transition()
 			.style("opacity", 1e-6).remove();
-			
+
 			cells.enter().append("path")
 			.attr("class", "vector")
 			.attr("vector-effect", "non-scaling-stroke")
 			.style("opacity", 1e-6)
 			.append("title");
-			
+
 			var scaleFactor = data.binSize/ 2 /
 			d3.max(data.map, function(d) {
 				return Math.max(Math.abs(d.value.x),Math.abs(d.value.y));
 			});
-			
+
 			cells.attr("d", function(d) {
-				var v0 = {x: (d.x + data.binSize/2), 
+				var v0 = {x: (d.x + data.binSize/2),
 						  y: (d.y + data.binSize/2)};
-				var v1 = {x: (v0.x + d.value.x*scaleFactor), 
+				var v1 = {x: (v0.x + d.value.x*scaleFactor),
 						  y: (v0.y + d.value.y*scaleFactor)};
 				return line([v0,v1]);
 			})
 				.select("title")
-				.text(function(d) { 
+				.text(function(d) {
 					return Math.sqrt(d.value.x*d.value.x + d.value.y*d.value.y)
-					+ " " + data.units; 
+					+ " " + data.units;
 				});
-			
+
 			cells.transition().style("opacity", 1);
 		});
 	}
-	
+
 	vectorfield.xScale = function(scale) {
 		if (! arguments.length) return x;
 		x = scale;
 		return vectorfield;
 	};
-	
+
 	vectorfield.yScale = function(scale) {
 		if (! arguments.length) return y;
 		y = scale;
@@ -78,12 +85,18 @@ d3.floorplan.vectorfield = function() {
 	vectorfield.id = function() {
 		return id;
 	};
-	
+
 	vectorfield.title = function(n) {
 		if (! arguments.length) return name;
 		name = n;
-		return images;
+		return vectorfield;
 	};
-	
+
+	vectorfield.visible = function(v) {
+		if (! arguments.length) return vis;
+		vis = v;
+		return vectorfield;
+	};
+
 	return vectorfield;
 };
